@@ -1,0 +1,30 @@
+
+inline static Table_Item *
+_efl_ui_table_item_date_get(Eo *obj, Efl_Ui_Table_Data *pd, Efl_Gfx_Entity *subobj)
+{
+   Table_Item *gi;
+   if (obj != efl_canvas_object_render_parent_get(subobj))
+     {
+        if (!efl_invalidated_get(subobj))
+          ERR("%p is not a child of %p", subobj, obj);
+        return NULL;
+     }
+   gi = efl_key_data_get(subobj, TABLE_ITEM_KEY);
+   if (!gi)
+     {
+        WRN("item %p has no table internal data", subobj);
+        EINA_INLIST_FOREACH(EINA_INLIST_GET(pd->items), gi)
+          {
+             if (gi->object == subobj)
+               break;
+          }
+        if (!gi)
+          {
+             ERR("item %p was not found in this table", subobj);
+             return NULL;
+          }
+     }
+   return gi;
+}
+
+
